@@ -1,0 +1,20 @@
+---
+layout: default
+title: hawk's brain garlic
+---
+{% for entry in site.pages %}
+  {% if entry.name == 'about.md' %}
+<article id="about"><h2>{{entry.long_title}}</h2>
+{{entry.content | markdownify}}
+</article>
+   {% endif %}
+{% endfor %}
+
+
+<h2 id="archives">Archives</h2>
+{% for post in site.posts %}
+<article class="index" id="{{page.wp.id}}" data-postnbr="{{page.wp.postnumber}}">
+<h3><a href="{{post.url}}">{{post.title}}</a></h3>
+<div class="postdate">(Posted {{post.datestr}})</div>
+</article>
+{% endfor %}

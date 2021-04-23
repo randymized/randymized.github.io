@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="alternate" type="application/rss+xml" href="{{ site.url }}/feed.xml">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+{% if page.long_title %}
+    <title>{{ page.long_title }}</title>
+{% else %}
+    <title>{{ page.title }}</title>
+{% endif %}
+  </head>
+  <body>
+    <header>
+      <h1><a href="/"><img src="/wp-content/banner.png" alt="hawk's brain garlic"></a></h1>
+      <nav>{% include navigation.html %}</nav>
+    </header>
+    {{ content }}
+    <footer id="copyright">&copy; {{ site.time | date: '%Y' }} <a href="/">hawk’s brain garlic</a>. All rights reserved.</footer>
+  </body>
+</html>

@@ -1,0 +1,98 @@
+body {
+    font-family: Arial, Verdana, Tahoma;
+    font-size: 62.5%;
+}
+header, nav, section, footer {display: block}
+body>header {background:#534A36;}
+h2 {
+    margin: 10px 0 2px 0;
+    line-height: 1.2em;
+    padding-bottom: 10px;
+    font-size: 2.2em;
+    font-weight: normal;
+    border-bottom: 1px solid rgb(202, 200, 196);
+}
+article{
+    line-height: 1.6em;
+    margin-top: 15px;
+    padding-top: 15px;
+    margin-bottom: 20px;
+    font-size: 1.4em;
+    max-width: 580px;
+}
+article>footer {
+    border-top: 1px solid #534A36;
+    font-size: 0.8em;
+}
+article.featured {background:#534A36;}
+article.index {
+    line-height: 140%
+}
+article.index h3 {
+    margin: 0;
+    border: 0;
+    font-size: 1.3em;
+    padding: 0;
+}
+article.index .postdate {
+    font-size: 80%;
+}
+#archives {
+    font-size: 30.8px;
+    font-weight: 400;
+    margin-top: 1em;
+    background-color: #EBECDD;
+    padding: .5em 0;
+}
+#p404 {
+    margin: 3em;
+    font-size: 180%;
+}
+body>footer {
+    background: #EBECDD;
+    padding: 0;
+    margin: 0 auto;
+    width: 100%;
+    padding: 30px 0px;
+    font-size: 1.1em;
+    text-align: left;
+}
+nav {
+    background-color: white;
+    border-bottom: solid #534A36 1px;
+    font-size: 1.3em;
+    padding-top: .1em;
+}
+nav ul {
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 0;
+}
+nav ul li {
+    display: inline
+}
+nav ul a {
+    padding: 1rem 1rem;
+}
+.rssfeed {
+    background: url(../images/rss.gif) left center no-repeat;
+}
+@media only screen and (max-width: 360px) {
+    nav ul a {
+        padding: 1rem 0.8rem;
+    }
+}
+@media only screen and (max-width: 629px) {
+    header img {
+        width: 320px
+    }
+}
+@media only screen and (min-width: 620px) {
+    nav,article,#archives,body>footer {
+        padding-left: 20px
+    }
+}@media only screen and (min-width: 700px) {
+    nav,article,#archives,body>footer {
+        padding-left: 60px
+    }
+}
