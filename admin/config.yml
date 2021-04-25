@@ -13,7 +13,7 @@ collections:
       - {label: "layout", name: "layout", widget: "hidden", default: "post"}
       - {label: "title", name: "title", widget: "string"}
       - {label: "date", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: "HH:mm"}
-      - {label: "datestr", name: "date", widget: "datetime", format: "LLLL"}
+      - {label: "datestr", name: "datestr", widget: "datetime", format: "LLLL"}
   - name: "pages" # Used in routes, e.g., /admin/collections/blog
     label: "Pages" # Used in the UI
     folder: "pages" # The path to the folder where the documents are stored
@@ -22,4 +22,4 @@ collections:
     fields: # The fields for each document, usually in front matter
       - {label: "layout", name: "layout", widget: "hidden", default: "page"}
       - {label: "title", name: "title", widget: "string"}
-      - {label: "long_title", name: "title", widget: "string"}
+      - {label: "long_title", name: "long_title", widget: "string"}
