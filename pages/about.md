@@ -4,7 +4,7 @@ title: about
 long_title: About hawk&#x2019;s brain garlic
 permalink: /about/
 ---
-We grow garlic in and around Red Wing, Minnesota, down in the southeast corner. We are lucky to garden where we do…it’s down right beautiful. And our friends and family support us by sharing their land and barns with us.
+We grow garlic in and around Red Wing, Minnesota, down in the southeast corner. We are lucky to garden where we do… it’s down right beautiful. And our friends and family support us by sharing their land and barns with us.
 
 Even though the name is fairly new, we have been growing garlic for ourselves and friends for over 20 years.  We’ve grown to the point that we are selling our garlic at the local Red Wing Farmers’ Market, the Minnesota Garlic Festival, and  one weekend in September at the Minnesota Renaissance Festival called “The Italian” weekend.
 
