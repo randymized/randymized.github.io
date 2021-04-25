@@ -13,7 +13,7 @@ title: hawk's brain garlic
 
 <h2 id="archives">Archives</h2>
 {% for post in site.posts %}
-<article class="index" id="{{page.wp.id}}" data-postnbr="{{page.wp.postnumber}}">
+<article class="index" id="{{post.wp.id}}" data-postnbr="{{post.wp.postnumber}}">
 <h3><a href="{{post.url}}">{{post.title}}</a></h3>
 <div class="postdate">(Posted {{post.datestr}})</div>
 </article>
