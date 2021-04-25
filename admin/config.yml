@@ -1,0 +1,25 @@
+backend:
+  name: github
+  branch: main
+  repo:  randymized/randymized.github.io 
+media_folder: "assets/images"
+collections:
+  - name: "blog" # Used in routes, e.g., /admin/collections/blog
+    label: "Blog" # Used in the UI
+    folder: "_posts" # The path to the folder where the documents are stored
+    create: true # Allow users to create new documents in this collection
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}" # Filename template, e.g., YYYY-MM-DD-title.md
+    fields: # The fields for each document, usually in front matter
+      - {label: "layout", name: "layout", widget: "hidden", default: "post"}
+      - {label: "title", name: "title", widget: "string"}
+      - {label: "date", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: "HH:mm"}
+      - {label: "datestr", name: "date", widget: "datetime", format: "LLLL"}
+  - name: "pages" # Used in routes, e.g., /admin/collections/blog
+    label: "Pages" # Used in the UI
+    folder: "pages" # The path to the folder where the documents are stored
+    create: false # Allow users to create new documents in this collection
+    slug: "{{slug}}" # Filename template, e.g., YYYY-MM-DD-title.md
+    fields: # The fields for each document, usually in front matter
+      - {label: "layout", name: "layout", widget: "hidden", default: "page"}
+      - {label: "title", name: "title", widget: "string"}
+      - {label: "long_title", name: "title", widget: "string"}
