@@ -6,7 +6,7 @@ permalink: /about/
 ---
 We grow garlic in and around Red Wing, Minnesota, down in the southeast corner. We are lucky to garden where we do… it’s down right beautiful. And our friends and family support us by sharing their land and barns with us.
 
-Even though the name is fairly new, we have been growing garlic for ourselves and friends for over 20 years.  We’ve grown to the point that we are selling our garlic at the local Red Wing Farmers’ Market, the Minnesota Garlic Festival, and  one weekend in September at the Minnesota Renaissance Festival called “The Italian” weekend.
+Even though the name is fairly new, we have been growing garlic for ourselves and friends for over 30 years.  We’ve grown to the point that we are selling our garlic at the local Red Wing Farmers’ Market, the Minnesota Garlic Festival, and  one weekend in September at the Minnesota Renaissance Festival called “The Italian” weekend.
 
 hawk’s brain is slowly adding on varieties…now growing 25 for sale. We also have inherited a test plot from Joel Girardin of Cannon Falls of Purple Stripe, Glazed Purple Stripe, Marbled Purple Stripe, and Porcelain.  Thank you, Joel!
 
