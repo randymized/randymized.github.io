@@ -1,0 +1,43 @@
+.rj {
+  text-align: right;
+}
+/* layout */
+section {
+  display: flex;
+}
+#fileselection,
+#outer {
+  flex-direction: column;
+}
+
+/* General table appearance */
+table {
+  border-collapse: collapse;
+}
+table,
+th,
+td {
+  border: 1px solid;
+}
+th,
+td {
+  padding: 1ex;
+}
+tr:nth-child(odd) {
+  background-color: #f2f2f2;
+}
+
+/* other */
+.stacked {
+  display: block;
+}
+.sum {
+  float: right;
+  text-align: right;
+  margin-left: 1em;
+}
+dialog {
+  max-inline-size: min(90vw, var(--size-content-3));
+  max-block-size: min(80vh, 100%);
+  max-block-size: min(80dvb, 100%);
+}
