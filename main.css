@@ -41,3 +41,6 @@ dialog {
   max-block-size: min(80vh, 100%);
   max-block-size: min(80dvb, 100%);
 }
+.simpletable {
+  margin-top: 1em;
+}

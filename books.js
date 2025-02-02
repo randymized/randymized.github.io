@@ -103,7 +103,7 @@ function yyyymmddToDisplay(yyyymmdd) {
 }
 class SimpleTable {
   constructor(specs) {
-    this.table = createElement("table", null, [
+    this.table = createElement("table", {class: 'simpletable'}, [
       [
         "thead",
         null,
@@ -196,6 +196,12 @@ function gui(datafile) {
     const accountPanel = clearAccountPanel();
 
     accountPanel.appendChild(createElement("h2", null, accountName));
+    if (accountRecords.shortname) {
+      accountPanel.appendChild(createElement("div", null, [
+        ['span',null,'Short name: '],
+        ['span',null,accountRecords.shortname]
+      ]));
+    }
 
     const accttable = new SimpleTable({
       headings: [
