@@ -188,6 +188,19 @@ function transactionPopup() {
 
 function gui(datafile) {
   function onLeafClick(event) {
+    // Event handler for a copy button. The text to copy
+    // should be bound to this instance, so that it is referenced by `this`
+    function onCopyButton() {
+      navigator.clipboard.writeText(this);
+    }
+    function copyable(container,text) {
+      return createElement(container, null, [
+        ['span', null, 'Short name: '],
+        ['span', null, text],
+        ['button', {class:'copybutton'}, 'Copy', { click: onCopyButton.bind(text) }]
+      ]);
+    }
+
     const accountName = datafile.accountIdList[this.accountIndex];
     const accountRecords = datafile.byAccount[accountName];
     const journalentries = datafile.journalentries;
@@ -195,12 +208,9 @@ function gui(datafile) {
 
     const accountPanel = clearAccountPanel();
 
-    accountPanel.appendChild(createElement("h2", null, accountName));
+    accountPanel.appendChild(copyable('h2',accountName))
     if (accountRecords.shortname) {
-      accountPanel.appendChild(createElement("div", null, [
-        ['span',null,'Short name: '],
-        ['span',null,accountRecords.shortname]
-      ]));
+      accountPanel.appendChild(copyable('div',accountRecords.shortname))
     }
 
     const accttable = new SimpleTable({
