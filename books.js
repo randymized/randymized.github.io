@@ -223,35 +223,42 @@ function gui(datafile) {
       ],
     });
 
-    accountRecords.journalentries.forEach((j, i) => {
-      const je = journalentries[j];
-      const transindices = je[4];
+    const currentTransSort= function (a,b) {
+      return a.yyyymmdd - b.yyyymmdd
+    }
+    accountRecords.journalentries.map(j =>{
+        const je = journalentries[j];
+        const transindices = je[4];
 
-      const transactionList = [];
-      function descendTransactions(tlist, indices) {
-        const firstElement = indices.shift();
-        if (firstElement === undefined) return;
-        const currentTrans = tlist[firstElement];
-        if (!currentTrans.yyyymmdd) currentTrans.yyyymmdd = currentTrans.date;
-        transactionList.push(currentTrans);
-        if (currentTrans.transactions)
-          descendTransactions(currentTrans.transactions, indices);
+        const transactionList= [];
+        function descendTransactions(tlist, indices) {
+          const firstElement = indices.shift();
+          if (firstElement === undefined) return;
+          const currentTrans = tlist[firstElement];
+          if (!currentTrans.yyyymmdd) currentTrans.yyyymmdd = currentTrans.date;
+          transactionList.push(currentTrans);
+          if (currentTrans.transactions)
+            descendTransactions(currentTrans.transactions, indices);
+        }
+        descendTransactions(transactions, je[4].slice());
+
+        return {
+          je: je,
+          yyyymmdd: transactionList[transactionList.length - 1]?.yyyymmdd,
+          transactionList: transactionList
+        }
       }
-      descendTransactions(transactions, je[4].slice());
-
-      const date =
-        yyyymmddToDisplay(
-          transactionList[transactionList.length - 1]?.yyyymmdd
-        ) || "";
+    )
+    .sort(currentTransSort)
+    .forEach((row) => {
+      const {je,yyyymmdd,transactionList}= row
       accttable.createRow(function* () {
-        const datecell = createCell("td", date);
-        yield datecell;
+        yield createCell("td", yyyymmddToDisplay(yyyymmdd) || '')
         for (const n of [1, 2]) {
           yield createCell("td", dollarsAndCents(je[n]), { class: "rj" });
         }
         yield createCell("td", je[3] || "");
         const transTD = createCell("td");
-        const translinks = [];
         for (const trans of transactionList.reverse()) {
           transTD.appendChild(
             createElement(
