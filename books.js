@@ -47,6 +47,7 @@ function createElement(tagname, attributes, inner, listeners) {
 }
 
 function dollarsAndCents(val) {
+  if (!val) return ''
   var amt = `${val}`;
   var negative = "";
   if (amt.startsWith("-")) {
@@ -54,8 +55,6 @@ function dollarsAndCents(val) {
     amt = amt.substring(1);
   }
   switch (amt.length) {
-    case 0:
-      return "0.00";
     case 1:
       return `${negative}0.0${amt}`;
     case 2:
