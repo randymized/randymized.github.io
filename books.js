@@ -192,12 +192,13 @@ function gui(datafile) {
     function onCopyButton() {
       navigator.clipboard.writeText(this);
     }
-    function copyable(container,text) {
-      return createElement(container, null, [
-        ['span', null, 'Short name: '],
+    function copyable(container,text, label) {
+      const subelements= [
         ['span', null, text],
         ['button', {class:'copybutton'}, 'Copy', { click: onCopyButton.bind(text) }]
-      ]);
+      ]
+      if (label) subelements.push(['span', null, 'Short name: '])
+      return createElement(container, null, subelements);
     }
 
     const accountName = datafile.accountIdList[this.accountIndex];
