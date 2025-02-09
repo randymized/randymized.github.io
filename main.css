@@ -9,6 +9,10 @@ section {
 #outer {
   flex-direction: column;
 }
+#tree-panel {
+  overflow: auto;
+  max-height: 80vh;
+}
 
 /* General table appearance */
 table {
