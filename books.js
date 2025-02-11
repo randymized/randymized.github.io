@@ -208,6 +208,9 @@ function gui(datafile) {
 
     const accountPanel = clearAccountPanel();
 
+    accountPanel.appendChild(createElement(
+      'a',{href:'#',class:'close'},'',{click:clearAccountPanel}
+    ))
     accountPanel.appendChild(copyable('h2',accountName))
     if (accountRecords.shortname) {
       accountPanel.appendChild(copyable('div',accountRecords.shortname))
