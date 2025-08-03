@@ -23,7 +23,7 @@ function createElement(tagname, attributes, inner, listeners) {
       if (typeof inner[0] === "string" || inner[0] instanceof String) {
         // the 'inner' argument is a single sub-element specification,
         // where the array elements are in the same order as arguments to this function
-        inner = [inner];
+        //           inner = [inner];
       }
       for (const i of inner) {
         // the 'inner' argument is an array of sub-element specifications
