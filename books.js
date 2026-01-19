@@ -139,11 +139,30 @@ function transactionPopup() {
       createElement(
         hdrtag,
         null,
-        yyyymmddToDisplay(trans.yyyymmdd || trans.date)
+        trans.tdate || yyyymmddToDisplay(trans.yyyymmdd || trans.date)
       )
     );
-    dest.appendChild(createElement(hdrtag, null, trans.description));
-    if (trans.journal) {
+    dest.appendChild(createElement(hdrtag, null, trans.tdescription || trans.description));
+    if (trans.tpostings) {
+      const jtable = new SimpleTable({
+        headings: [
+          { field: "acct", text: "Account" },
+          { field: "amt", text: "Amount" },
+          { field: "comment", text: "Comment" },
+        ],
+      });
+      for (const j of trans.tpostings) {
+        const posting= trans.allpostings[j]
+        jtable.createRow(function* () {
+          yield createCell("td", posting.paccount);
+          yield createCell("td", dollarsAndCents(posting.pamount.aquantity.floatingPoint*100), {
+              class: "rj",
+            });
+          yield createCell("td", posting.pcomment);
+        });
+      }
+      jtable.appendTo(dest);
+    } else if (trans.journal) {
       const jtable = new SimpleTable({
         headings: [
           { field: "acct", text: "Account" },
@@ -164,8 +183,8 @@ function transactionPopup() {
         });
       }
       jtable.appendTo(dest);
-    } else if (trans.transactions) {
-      //transactionTable(dest, trans.transactions, level+1)
+    } else if (trans.transactions) { // not in supported in hledger
+      transactionTable(dest, trans.transactions, level+1)
     }
 
     const copyOfTrans = Object.assign({}, trans);
@@ -173,7 +192,13 @@ function transactionPopup() {
     delete copyOfTrans.date;
     delete copyOfTrans.journal;
     delete copyOfTrans.description;
-    //delete copyOfTrans.transactions
+    delete copyOfTrans.paccount;
+    delete copyOfTrans.pamount;
+    delete copyOfTrans.pdate;
+    delete copyOfTrans.tdate;
+    delete copyOfTrans.tindex;
+    delete copyOfTrans.transaction;
+    delete copyOfTrans.transactions;
 
     dest.appendChild(
       createElement("pre", null, JSON.stringify(copyOfTrans, null, 2))
@@ -186,6 +211,7 @@ function transactionPopup() {
 }
 
 function gui(datafile) {
+  const hledger= Object.hasOwn(datafile, "format") && datafile.format == 'h1'
   function onLeafClick(event) {
     // Event handler for a copy button. The text to copy
     // should be bound to this instance, so that it is referenced by `this`
@@ -203,7 +229,7 @@ function gui(datafile) {
 
     const accountName = datafile.accountIdList[this.accountIndex];
     const accountRecords = datafile.byAccount[accountName];
-    const journalentries = datafile.journalentries;
+    const postings = hledger? datafile.postings : datafile.journalentries
     const transactions = datafile.transactions;
 
     const accountPanel = clearAccountPanel();
@@ -212,12 +238,17 @@ function gui(datafile) {
       'a',{href:'#',class:'close'},'',{click:clearAccountPanel}
     ))
     accountPanel.appendChild(copyable('h2',accountName))
-    if (accountRecords.shortname) {
+    if (!hledger && accountRecords.shortname) {
       accountPanel.appendChild(copyable('div',accountRecords.shortname))
     }
 
     const accttable = new SimpleTable({
-      headings: [
+      headings: hledger? [
+        { field: "date", text: "Date" },
+        { field: "amount", text: "Amount" },
+        { field: "note", text: "Note" },
+        { field: "trans", text: "Transaction" },
+      ] : [
         { field: "date", text: "Date" },
         { field: "debit", text: "Debit" },
         { field: "credit", text: "Credit" },
@@ -226,79 +257,112 @@ function gui(datafile) {
       ],
     });
 
-    const currentTransSort= function (a,b) {
-      return a.yyyymmdd - b.yyyymmdd
-    }
-    accountRecords.journalentries.map(j =>{
-        const je = journalentries[j];
-        const transindices = je[4];
-
-        const transactionList= [];
-        function descendTransactions(tlist, indices) {
-          const firstElement = indices.shift();
-          if (firstElement === undefined) return;
-          const currentTrans = tlist[firstElement];
-          if (!currentTrans.yyyymmdd) currentTrans.yyyymmdd = currentTrans.date;
-          transactionList.push(currentTrans);
-          if (currentTrans.transactions)
-            descendTransactions(currentTrans.transactions, indices);
-        }
-        descendTransactions(transactions, je[4].slice());
-
-        return {
-          je: je,
-          yyyymmdd: transactionList[transactionList.length - 1]?.yyyymmdd,
-          transactionList: transactionList
-        }
+    if (hledger) {
+      const byPostingDate= function (a,b) {
+        return a.pdate || a.tdate - b.pdate || b.tdate
       }
-    )
-    .sort(currentTransSort)
-    .forEach((row) => {
-      const {je,yyyymmdd,transactionList}= row
-      accttable.createRow(function* () {
-        yield createCell("td", yyyymmddToDisplay(yyyymmdd) || '')
-        for (const n of [1, 2]) {
-          yield createCell("td", dollarsAndCents(je[n]), { class: "rj" });
-        }
-        yield createCell("td", je[3] || "");
-        const transTD = createCell("td");
-        for (const trans of transactionList.reverse()) {
-          transTD.appendChild(
-            createElement(
-              "a",
-              { class: "stacked", href: "#" },
-              trans.description,
-              { click: transactionPopup.bind(trans) }
-            )
-          );
-        }
-        yield transTD;
+      accountRecords.journalentries
+        .sort(byPostingDate)
+        .forEach((row) => {
+          const {pamount,pdate,tdate,pcomment,tindex}= row
+          const amt= pamount.aquantity.floatingPoint*100
+          const trans= transactions[tindex]
+          trans.allpostings= postings
+          accttable.createRow(function* () {
+            yield createCell("td", pdate || tdate)
+            yield createCell("td", dollarsAndCents(pamount), { class: "rj" })
+            yield createCell("td", pcomment);
+            const transTD = createCell("td");
+            transTD.appendChild(
+              createElement(
+                "a",
+                { class: "stacked", href: "#" },
+                trans.tdescription,
+                { click: transactionPopup.bind(trans) }
+              )
+            );
+            yield transTD;
+          });
       });
-    });
+    } else {  // !hledger
+      const currentTransSort= function (a,b) {
+        return a.yyyymmdd - b.yyyymmdd
+      }
+      accountRecords.journalentries.map(j =>{
+          const je = postings[j];
+
+          const transactionList= [];
+          function descendTransactions(tlist, indices) {
+            const firstElement = indices.shift();
+            if (firstElement === undefined) return;
+            const currentTrans = tlist[firstElement];
+            if (!currentTrans.yyyymmdd) currentTrans.yyyymmdd = currentTrans.date;
+            transactionList.push(currentTrans);
+            if (currentTrans.transactions)
+              descendTransactions(currentTrans.transactions, indices);
+          }
+          descendTransactions(transactions, je[4].slice());
+
+          return {
+            je: je,
+            yyyymmdd: transactionList[transactionList.length - 1]?.yyyymmdd,
+            transactionList: transactionList
+          }
+        }
+      )
+      .sort(currentTransSort)
+      .forEach((row) => {
+        const {je,yyyymmdd,transactionList}= row
+        accttable.createRow(function* () {
+          yield createCell("td", yyyymmddToDisplay(yyyymmdd) || '')
+          for (const n of [1, 2]) {
+            yield createCell("td", dollarsAndCents(je[n]), { class: "rj" });
+          }
+          yield createCell("td", je[3] || "");
+          const transTD = createCell("td");
+          for (const trans of transactionList.reverse()) {
+            transTD.appendChild(
+              createElement(
+                "a",
+                { class: "stacked", href: "#" },
+                trans.description,
+                { click: transactionPopup.bind(trans) }
+              )
+            );
+          }
+          yield transTD;
+        });
+      });
+    }
 
     accttable.appendTo(accountPanel);
 
-    accountPanel.appendChild(createElement("h3", null, "Summary"));
+    if (hledger) {
+      accountPanel.appendChild(createElement("div", null, `Total: ${dollarsAndCents(accountRecords.sum)}`));
+    }
+    else {
+      accountPanel.appendChild(createElement("h3", null, "Summary"));
 
-    const jtable = new SimpleTable({
-      headings: [
-        { field: "debit", text: "Debit" },
-        { field: "credit", text: "Credit" },
-        { field: "credit", text: "Difference" },
-      ],
-    });
-
-    jtable.createRow(function* () {
-      const sum = accountRecords.sum;
-      for (const n of [1, 2]) {
-        yield createCell("td", dollarsAndCents(sum[n]), { class: "rj" });
-      }
-      yield createCell("td", dollarsAndCents(sum[1] - sum[2]), {
-        class: "rj",
+      const jtable = new SimpleTable({
+        headings: [
+          { field: "debit", text: "Debit" },
+          { field: "credit", text: "Credit" },
+          { field: "credit", text: "Difference" },
+        ],
       });
-    });
 
-    jtable.appendTo(accountPanel);
+      jtable.createRow(function* () {
+        const sum = accountRecords.sum;
+        for (const n of [1, 2]) {
+          yield createCell("td", dollarsAndCents(sum[n]), { class: "rj" });
+        }
+        yield createCell("td", dollarsAndCents(sum[1] - sum[2]), {
+          class: "rj",
+        });
+      });
+
+      jtable.appendTo(accountPanel);
+    }
   }
 
   const treeul = document.querySelector("#tree");
@@ -309,7 +373,7 @@ function gui(datafile) {
   function addTreeSection(macroAccount, ul) {
     macroAccount.forEach((sub) => {
       const sum = sub.sum;
-      const diff = sum[1] - sum[2];
+      const diff = hledger? sum : sum[1] - sum[2];
       const sumspecs = ["span", { class: "sum" }, "$" + dollarsAndCents(diff)];
       if (Object.hasOwn(sub, "nodes")) {
         const chkid = `ck${sub.id}`;
